@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.gonzaloenei.com" }],
+      "destination": "https://gonzaloenei.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "gonzalo.fyi" }],
+      "destination": "https://gonzaloenei.com/:path*",
+      "permanent": true
+    }
+  ]
+}
