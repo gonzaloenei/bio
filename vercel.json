@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/claude-interviews",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews"
+    },
+    {
+      "source": "/claude-interviews/",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews"
+    },
+    {
+      "source": "/claude-interviews/:path+/",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews/:path+"
+    },
+    {
+      "source": "/claude-interviews/:path*",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews/:path*"
+    }
+  ]
+}
