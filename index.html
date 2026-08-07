@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="https://use.typekit.net/hal0ftj.css">
   <style>
     :root {
-      --text: #2c2c2c;
-      --link-underline: #dddddd;
-      --bg: #f4f4f4;
+      --text: #0d0c0c;
+      --link-underline: #c9c9c9;
+      --bg: #fbfbfb;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -20,8 +20,7 @@
       font-family: "neue-haas-grotesk-text", "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       font-size: 14px;
-      line-height: 1.75;
-      letter-spacing: -0.008em;
+      line-height: 1.3;
     }
     main {
       max-width: 486px;
@@ -55,7 +54,7 @@
       color: var(--text);
     }
     section { margin-top: 42px; }
-    p + p { margin-top: 18px; }
+    p + p { margin-top: 14px; }
     a {
       color: inherit;
       text-decoration: underline;
@@ -64,6 +63,18 @@
       text-decoration-thickness: 1px;
     }
     a:hover { text-decoration-color: #8a8a8a; }
+
+    /* Inline brand marks, set at text height and aspect-locked to the source art */
+    .logo {
+      display: inline-block;
+      vertical-align: -0.18em;
+      margin-right: 0.22em;
+    }
+    .logo-faces     { width: 1.583em; height: 0.85em; }
+    .logo-perhaps   { width: 0.962em; height: 0.95em; }
+    .logo-workspace { width: 1.25em;  height: 1.25em; }
+    .logo-fintual   { width: 1.05em;  height: 1.05em; }
+
     @media (max-width: 640px) {
       main { padding-top: 80px; }
     }
@@ -88,9 +99,9 @@
     <p class="email">gonzalo [at] gonzaloenei [dot] com</p>
 
     <section>
-      <p>I co-founded <a href="https://faces.app">Faces</a>, a presentations platform where every slide is a software artifact. I was the CEO for 3 years. My co-founders run it today. We built several other <a href="https://perhaps.inc">AI-native products</a>, including a <a href="https://workspace.faces.site/">workspace</a> where every tool was usable by humans and agents, and a <a href="https://x.com/gopalkraman/status/1883248141853696016">Chrome extension</a> that generated interfaces using the underlying webpage as a backend. Hi Ventures and Bessemer backed us.</p>
+      <p>I co-founded <img class="logo logo-faces" src="logos/faces.png" alt="" aria-hidden="true"><a href="https://faces.app">Faces</a>, a presentations platform where every slide is a software artifact. I was the CEO for 3 years. My co-founders run it today. We built several other <img class="logo logo-perhaps" src="logos/perhaps.svg" alt="" aria-hidden="true"><a href="https://perhaps.inc">AI-native products</a>, including a <img class="logo logo-workspace" src="logos/workspace.png" alt="" aria-hidden="true"><a href="https://workspace.faces.site/">workspace</a> where every tool was usable by humans and agents, and a <a href="https://x.com/gopalkraman/status/1883248141853696016">Chrome extension</a> that generated interfaces using the underlying webpage as a backend. Hi Ventures and Bessemer backed us.</p>
 
-      <p>Before that, I was employee No.11 at <a href="https://fintual.com">Fintual</a>, which makes investing easy for people in LatAm. I was Head of Growth and later VP of Product, as we grew from $10M to $650M in assets under management in four years. This was Sequoia&rsquo;s first investment in Chilean founders, founders who in turn invested in Faces.</p>
+      <p>Before that, I was employee No.11 at <img class="logo logo-fintual" src="logos/fintual.svg" alt="" aria-hidden="true"><a href="https://fintual.com">Fintual</a>, which makes investing easy for people in LatAm. I was Head of Growth and later VP of Product, as we grew from $10M to $650M in assets under management in four years. This was Sequoia&rsquo;s first investment in Chilean founders, founders who in turn invested in Faces.</p>
 
       <p>I also started a positive media company that was viewed by millions monthly, co-authored some behavioral <a href="https://journals.aom.org/doi/10.5465/AMPROC.2023.13176abstract">research</a>, and studied humanities, law and entrepreneurship at <a href="https://www.topuniversities.com/latin-america-caribbean-overall">PUC</a>, LatAm&rsquo;s top university.</p>
 
