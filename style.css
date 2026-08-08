@@ -97,9 +97,9 @@ strong { font-weight: 500; }
 
   /* The resume carries far more content, so it sets tighter to hold one sheet */
   .resume { font-size: 9.5pt; line-height: 1.45; }
-  .resume .section-title { margin-top: 20px; }
-  .resume .resume-name + .section-title { margin-top: 16px; }
-  .resume .entry { margin-top: 12px; }
+  .resume .section-title { margin-top: 16px; }
+  .resume .resume-name + .section-title { margin-top: 13px; }
+  .resume .entry { margin-top: 10px; }
   .resume .entry-body { margin-top: 2px; }
   .resume .contact { margin-top: 14px; }
 
