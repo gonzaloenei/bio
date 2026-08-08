@@ -7,75 +7,7 @@
   <meta name="description" content="Gonzalo Enei — co-founder of Faces, previously Fintual.">
   <link rel="preconnect" href="https://use.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/hal0ftj.css">
-  <style>
-    :root {
-      --text: #1a1a1a;
-      --link-underline: #c9c9c9;
-      --bg: #fbfbfb;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: "neue-haas-grotesk-text", "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-    main {
-      max-width: 545px;
-      margin: 0 auto;
-      padding: 158px 24px 96px;
-    }
-    p + p { margin-top: 17px; }
-    a {
-      color: inherit;
-      text-decoration: underline;
-      text-decoration-color: var(--link-underline);
-      text-underline-offset: 2.5px;
-      text-decoration-thickness: 1px;
-    }
-    a:hover { text-decoration-color: #8a8a8a; }
-
-    /* Inline brand marks, set at text height and aspect-locked to the source art */
-    .logo {
-      display: inline-block;
-      vertical-align: -0.18em;
-      margin-right: 0.22em;
-    }
-    /* Faces sits smaller and higher than the shared rule — the wide arc reads heavy on the baseline */
-    .logo-faces      { width: 1.765em; height: 0.945em; vertical-align: -0.06em; }
-    .logo-perhaps    { width: 1.064em; height: 1.05em; }
-    .logo-workspace  { width: 1.138em; height: 1.05em; }
-    .logo-interfaces { width: 1.123em; height: 1.05em; }
-    .logo-fintual    { width: 1.05em;  height: 1.05em; }
-
-    @media (max-width: 640px) {
-      main { padding-top: 80px; }
-    }
-
-    /* Letter-format PDF (generated with `npm run pdf`) */
-    @page {
-      size: letter;
-      margin: 1.15in 1.3in;
-    }
-    @media print {
-      body {
-        background: #fff;
-        font-size: 11pt;
-        line-height: 1.55;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      main {
-        max-width: none;
-        margin: 0;
-        padding: 0;
-      }
-      p + p { margin-top: 0.62em; }
-      p { orphans: 2; widows: 2; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>

@@ -19,6 +19,17 @@
     {
       "source": "/pdf",
       "destination": "/gonzalo-enei.pdf"
+    },
+    {
+      "source": "/resume",
+      "destination": "/resume.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/resume/",
+      "destination": "/resume",
+      "permanent": true
     }
   ],
   "headers": [
