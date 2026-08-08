@@ -31,6 +31,10 @@
     {
       "source": "/resume",
       "destination": "/resume.html"
+    },
+    {
+      "source": "/pdf/ode",
+      "destination": "/pdf/ode.pdf"
     }
   ],
   "redirects": [
@@ -48,6 +52,16 @@
           "key": "Content-Disposition",
           "value": "attachment; filename=\"Gonzalo Enei.pdf\""
         }
+      ]
+    },
+    {
+      "source": "/pdf/ode",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Gonzalo Enei - Ode.pdf\""
+        },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     }
   ]
