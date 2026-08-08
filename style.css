@@ -45,16 +45,16 @@ a:hover { text-decoration-color: #8a8a8a; }
 /* ---- Resume ---------------------------------------------------------- */
 .resume-name {
   font-size: 1.125em;
-  font-weight: 700;
+  font-weight: 500;
 }
 .section-title {
-  font-weight: 700;
+  font-weight: 500;
   margin-top: 40px;
 }
 .section-title:first-child { margin-top: 0; }
 .resume-name + .section-title { margin-top: 28px; }
 .entry { margin-top: 22px; }
-.entry-role { font-weight: 700; }
+.entry-role { font-weight: 500; }
 .entry-dates { color: var(--muted); }
 .entry p + p { margin-top: 0; }
 .entry-body { margin-top: 4px; }
@@ -63,6 +63,9 @@ a:hover { text-decoration-color: #8a8a8a; }
 
 /* ---- Cover letters --------------------------------------------------- */
 .signoff { margin-top: 28px; }
+/* Medium, not the browser's default bold — emphasis here is a change of
+   weight within the paragraph, not a shout. */
+strong { font-weight: 500; }
 
 @media (max-width: 640px) {
   main { padding-top: 80px; }
