@@ -68,7 +68,7 @@ a:hover { text-decoration-color: #8a8a8a; }
 @media print {
   body {
     background: #fff;
-    font-size: 11pt;
+    font-size: 10.5pt;
     line-height: 1.55;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -81,15 +81,10 @@ a:hover { text-decoration-color: #8a8a8a; }
   p + p { margin-top: 0.62em; }
   p { orphans: 2; widows: 2; }
 
-  /* Each page of the combined PDF starts on a fresh sheet */
-  .page { page-break-after: always; }
-  .page:last-child { page-break-after: auto; }
+  /* The combined PDF flows as one continuous document; the bio and the
+     resume are separated by a normal section gap, not a forced page break. */
+  .page + .page { margin-top: 2.5em; }
 
-  /* The resume carries more content, so it sets tighter than the bio */
-  .resume { font-size: 9.6pt; line-height: 1.45; }
-  .resume .section-title { margin-top: 20px; }
-  .resume .entry { margin-top: 12px; }
-  .resume .entry-body { margin-top: 2px; }
-  .resume .contact { margin-top: 14px; }
+  /* Keep an entry from splitting across a page boundary */
   .entry, .contact { page-break-inside: avoid; }
 }

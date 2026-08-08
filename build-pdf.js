@@ -55,4 +55,3 @@ const pdf = fs.readFileSync(OUT);
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 const links = (pdf.toString('latin1').match(/\/Subtype\s*\/Link/g) || []).length;
 console.log(`wrote ${path.basename(OUT)} — ${pages} pages, ${links} links, ${(pdf.length / 1024).toFixed(0)}KB`);
-if (pages !== 2) console.warn(`⚠️  expected 2 pages, got ${pages} — adjust .resume print sizing in style.css`);
