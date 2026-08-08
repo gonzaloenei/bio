@@ -15,6 +15,21 @@
     {
       "source": "/claude-interviews/:path*",
       "destination": "https://claude-interviews.vercel.app/claude-interviews/:path*"
+    },
+    {
+      "source": "/pdf",
+      "destination": "/gonzalo-enei.pdf"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/pdf",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Gonzalo Enei.pdf\""
+        }
+      ]
     }
   ]
 }

@@ -53,6 +53,28 @@
     @media (max-width: 640px) {
       main { padding-top: 80px; }
     }
+
+    /* Letter-format PDF (generated with `npm run pdf`) */
+    @page {
+      size: letter;
+      margin: 1.15in 1.3in;
+    }
+    @media print {
+      body {
+        background: #fff;
+        font-size: 11pt;
+        line-height: 1.55;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      main {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+      p + p { margin-top: 0.62em; }
+      p { orphans: 2; widows: 2; }
+    }
   </style>
 </head>
 <body>
