@@ -41,6 +41,8 @@ a:hover { text-decoration-color: #8a8a8a; }
 .logo-interfaces { width: 1.123em; height: 1.05em; }
 .logo-fintual    { width: 1.05em;  height: 1.05em; }
 .logo-evml       { width: 1.05em;  height: 1.05em; }
+/* Wide horizontal mark, so it takes the Faces treatment rather than the square rule */
+.logo-ode        { width: 2.141em; height: 0.945em; vertical-align: -0.06em; }
 
 /* ---- Resume ---------------------------------------------------------- */
 .resume-name {
