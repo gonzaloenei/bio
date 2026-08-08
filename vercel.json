@@ -13,6 +13,14 @@
       "destination": "https://claude-interviews.vercel.app/claude-interviews/:path+"
     },
     {
+      "source": "/claude-interviews-demo",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews/demo"
+    },
+    {
+      "source": "/claude-interviews-demo/",
+      "destination": "https://claude-interviews.vercel.app/claude-interviews/demo"
+    },
+    {
       "source": "/claude-interviews/:path*",
       "destination": "https://claude-interviews.vercel.app/claude-interviews/:path*"
     },
