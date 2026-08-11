@@ -84,8 +84,12 @@ const resume = mainOf(path.join(DIR, 'resume.html'));
 
 render([mainOf(path.join(DIR, 'index.html')), resume], path.join(DIR, 'gonzalo-enei.pdf'));
 
+fs.mkdirSync(OUTDIR, { recursive: true });
+// Resume on its own — what an application form's résumé field expects, since
+// those are machine-parsed and a cover letter on page one confuses the parser.
+render([resume], path.join(OUTDIR, 'resume.pdf'));
+
 if (fs.existsSync(LETTERS)) {
-  fs.mkdirSync(OUTDIR, { recursive: true });
   for (const file of fs.readdirSync(LETTERS).filter((f) => f.endsWith('.html')).sort()) {
     const slug = path.basename(file, '.html');
     const src = path.join(LETTERS, file);
