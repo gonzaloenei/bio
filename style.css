@@ -44,6 +44,7 @@ a:hover { text-decoration-color: #8a8a8a; }
 /* Wide horizontal mark, so it takes the Faces treatment rather than the square rule */
 .logo-ode        { width: 1.585em; height: 0.70em; vertical-align: -0.02em; }
 .logo-google     { width: 1.034em; height: 1.05em; }
+.logo-spot       { width: 1.325em; height: 1.05em; }
 
 /* ---- Resume ---------------------------------------------------------- */
 .resume-name {
@@ -99,10 +100,10 @@ strong { font-weight: 500; }
   .page + .page { page-break-before: always; }
 
   /* The resume carries far more content, so it sets tighter to hold one sheet */
-  .resume { font-size: 9.5pt; line-height: 1.45; }
-  .resume .section-title { margin-top: 16px; }
-  .resume .resume-name + .section-title { margin-top: 13px; }
-  .resume .entry { margin-top: 10px; }
+  .resume { font-size: 9pt; line-height: 1.4; }
+  .resume .section-title { margin-top: 14px; }
+  .resume .resume-name + .section-title { margin-top: 11px; }
+  .resume .entry { margin-top: 8px; }
   .resume .entry-body { margin-top: 2px; }
   .resume .contact { margin-top: 14px; }
 
