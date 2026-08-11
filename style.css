@@ -100,12 +100,12 @@ strong { font-weight: 500; }
   .page + .page { page-break-before: always; }
 
   /* The resume carries far more content, so it sets tighter to hold one sheet */
-  .resume { font-size: 9pt; line-height: 1.4; }
-  .resume .section-title { margin-top: 14px; }
+  .resume { font-size: 9pt; line-height: 1.36; }
+  .resume .section-title { margin-top: 12px; }
   .resume .resume-name + .section-title { margin-top: 11px; }
-  .resume .entry { margin-top: 8px; }
-  .resume .entry-body { margin-top: 2px; }
-  .resume .contact { margin-top: 14px; }
+  .resume .entry { margin-top: 7px; }
+  .resume .entry-body { margin-top: 1px; }
+  .resume .contact { margin-top: 11px; }
 
   /* Keep an entry from splitting across a page boundary */
   .entry, .contact { page-break-inside: avoid; }
