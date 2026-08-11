@@ -30,6 +30,21 @@ const mainOf = (file) => {
   return m[0].replace(/(src|href)="\.\.\//g, '$1="');
 };
 
+/**
+ * A letter can drop parts of the resume it shouldn't carry, by naming their
+ * class in `<main data-omit="...">`. The Google letter uses this to leave out
+ * the Claude Interviews link, which would otherwise still reach the reader on
+ * page two after being removed from page one.
+ */
+const omitOf = (file) =>
+  (fs.readFileSync(file, 'utf8').match(/<main[^>]*\sdata-omit="([^"]+)"/i) || [])[1];
+
+const stripClass = (html, cls) => {
+  const re = new RegExp(`\\s*<(\\w+)[^>]*class="[^"]*\\b${cls}\\b[^"]*"[^>]*>[\\s\\S]*?<\\/\\1>`, 'gi');
+  if (!re.test(html)) throw new Error(`data-omit="${cls}" matched nothing in the resume`);
+  return html.replace(re, '');
+};
+
 const render = (pages, out) => {
   const tmp = path.join(DIR, '.print.html');
   fs.writeFileSync(tmp, `<!doctype html>
@@ -73,6 +88,11 @@ if (fs.existsSync(LETTERS)) {
   fs.mkdirSync(OUTDIR, { recursive: true });
   for (const file of fs.readdirSync(LETTERS).filter((f) => f.endsWith('.html')).sort()) {
     const slug = path.basename(file, '.html');
-    render([mainOf(path.join(LETTERS, file)), resume], path.join(OUTDIR, `${slug}.pdf`));
+    const src = path.join(LETTERS, file);
+    const omit = omitOf(src);
+    render(
+      [mainOf(src), omit ? stripClass(resume, omit) : resume],
+      path.join(OUTDIR, `${slug}.pdf`)
+    );
   }
 }
