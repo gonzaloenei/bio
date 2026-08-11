@@ -43,6 +43,7 @@ a:hover { text-decoration-color: #8a8a8a; }
 .logo-evml       { width: 1.05em;  height: 1.05em; }
 /* Wide horizontal mark, so it takes the Faces treatment rather than the square rule */
 .logo-ode        { width: 1.585em; height: 0.70em; vertical-align: -0.02em; }
+.logo-google     { width: 1.034em; height: 1.05em; }
 
 /* ---- Resume ---------------------------------------------------------- */
 .resume-name {
