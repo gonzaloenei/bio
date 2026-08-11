@@ -32,9 +32,8 @@ const mainOf = (file) => {
 
 /**
  * A letter can drop parts of the resume it shouldn't carry, by naming their
- * class in `<main data-omit="...">`. The Google letter uses this to leave out
- * the Claude Interviews link, which would otherwise still reach the reader on
- * page two after being removed from page one.
+ * class in `<main data-omit="...">` — useful when something removed from the
+ * letter would otherwise still reach the reader on page two.
  */
 const omitOf = (file) =>
   (fs.readFileSync(file, 'utf8').match(/<main[^>]*\sdata-omit="([^"]+)"/i) || [])[1];
