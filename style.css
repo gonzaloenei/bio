@@ -99,7 +99,7 @@ strong { font-weight: 500; }
 /* The resume's marks arrive in their own reading order. They sit far apart
    vertically, so the stagger is paced to a downward scan rather than the
    bio's within-a-sentence rhythm — and the gaps widen as they go. */
-.animate-logos .resume .logo-spot    { --d: 0.54s; }
+.animate-logos .resume .logo-spot    { --d: 0.4s; }
 .animate-logos .resume .logo-faces   { --d: 0.86s; }
 .animate-logos .resume .logo-fintual { --d: 1.26s; }
 .animate-logos .resume .logo-evml    { --d: 1.76s; }
