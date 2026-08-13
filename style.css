@@ -100,9 +100,9 @@ strong { font-weight: 500; }
    vertically, so the stagger is paced to a downward scan rather than the
    bio's within-a-sentence rhythm — and the gaps widen as they go. */
 .animate-logos .resume .logo-spot    { --d: 0.6s; }
-.animate-logos .resume .logo-faces   { --d: 1.15s; }
-.animate-logos .resume .logo-fintual { --d: 1.85s; }
-.animate-logos .resume .logo-evml    { --d: 2.7s; }
+.animate-logos .resume .logo-faces   { --d: 0.95s; }
+.animate-logos .resume .logo-fintual { --d: 1.4s; }
+.animate-logos .resume .logo-evml    { --d: 1.95s; }
 @media (prefers-reduced-motion: reduce) {
   .animate-logos .logo { animation: none; }
 }
