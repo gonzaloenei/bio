@@ -92,7 +92,7 @@ strong { font-weight: 500; }
   animation-delay: var(--d, 0.6s), calc(var(--d, 0.6s) + 0.1s);
 }
 .animate-logos .logo-faces      { --d: 0.56s; }
-.animate-logos .logo-perhaps    { --d: 1.23s; }
+.animate-logos .logo-perhaps    { --d: 1.03s; }
 .animate-logos .logo-workspace  { --d: 1.5s; }
 .animate-logos .logo-interfaces { --d: 1.79s; }
 .animate-logos .logo-fintual    { --d: 2.06s; }
