@@ -71,6 +71,43 @@ a:hover { text-decoration-color: #8a8a8a; }
    weight within the paragraph, not a shout. */
 strong { font-weight: 500; }
 
+/* ---- Icon entrance (bio page only: <body class="animate-logos">) ------ */
+/* The paragraph lays out without the marks, then each one springs up out of
+   the text line — the word-gap opens first, and the mark pops into it a beat
+   later, staggered in reading order. */
+@keyframes logo-open {
+  from { width: 0; margin-right: 0; }
+}
+@keyframes logo-pop {
+  0%   { transform: scale(0); }
+  62%  { transform: scale(1.16); }
+  82%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.animate-logos .logo {
+  transform-origin: 50% 85%;
+  animation:
+    logo-open 0.3s cubic-bezier(0.2, 0, 0, 1) both,
+    logo-pop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  animation-delay: var(--d, 0.6s), calc(var(--d, 0.6s) + 0.1s);
+}
+.animate-logos .logo-faces      { --d: 0.6s; }
+.animate-logos .logo-perhaps    { --d: 0.78s; }
+.animate-logos .logo-workspace  { --d: 0.96s; }
+.animate-logos .logo-interfaces { --d: 1.14s; }
+.animate-logos .logo-fintual    { --d: 1.32s; }
+/* The resume's marks arrive in their own reading order */
+.animate-logos .resume .logo-spot    { --d: 0.6s; }
+.animate-logos .resume .logo-faces   { --d: 0.78s; }
+.animate-logos .resume .logo-fintual { --d: 0.96s; }
+.animate-logos .resume .logo-evml    { --d: 1.14s; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-logos .logo { animation: none; }
+}
+@media print {
+  .animate-logos .logo { animation: none; }
+}
+
 @media (max-width: 640px) {
   main { padding-top: 80px; }
 }
