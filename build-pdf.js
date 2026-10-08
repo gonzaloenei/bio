@@ -87,6 +87,9 @@ fs.mkdirSync(OUTDIR, { recursive: true });
 // Resume on its own — what an application form's résumé field expects, since
 // those are machine-parsed and a cover letter on page one confuses the parser.
 render([resume], path.join(OUTDIR, 'resume.pdf'));
+// The evaluator-platform variant (Mercor, Handshake …) — its own document,
+// not composed with any letter.
+render([mainOf(path.join(DIR, 'evaluator-resume.html'))], path.join(OUTDIR, 'evaluator.pdf'));
 
 if (fs.existsSync(LETTERS)) {
   for (const file of fs.readdirSync(LETTERS).filter((f) => f.endsWith('.html')).sort()) {

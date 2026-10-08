@@ -51,6 +51,19 @@ a:hover { text-decoration-color: #8a8a8a; }
   font-size: 1.125em;
   font-weight: 500;
 }
+/* Evaluator variant: a scanner's first line, then the languages it filters on */
+.headline { margin-top: 6px; }
+.langs {
+  margin-top: 2px;
+  color: var(--muted);
+}
+.resume ul.bullets {
+  list-style: disc;
+  padding-left: 1.15em;
+  margin-top: 4px;
+}
+.resume ul.bullets li { margin-top: 3px; }
+.resume ul.bullets li::marker { color: var(--muted); }
 .section-title {
   font-weight: 500;
   margin-top: 40px;
@@ -146,6 +159,8 @@ strong { font-weight: 500; }
   .resume .entry-body { margin-top: 1px; }
   .resume .contact { margin-top: 11px; }
 
-  /* Keep an entry from splitting across a page boundary */
+  /* Keep an entry from splitting across a page boundary, and a section
+     heading from being stranded at the bottom of a page */
   .entry, .contact { page-break-inside: avoid; }
+  .section-title { page-break-after: avoid; }
 }

@@ -55,12 +55,25 @@
     {
       "source": "/pdf/resume",
       "destination": "/pdf/resume.pdf"
+    },
+    {
+      "source": "/evaluator-resume",
+      "destination": "/evaluator-resume.html"
+    },
+    {
+      "source": "/pdf/evaluator",
+      "destination": "/pdf/evaluator.pdf"
     }
   ],
   "redirects": [
     {
       "source": "/resume/",
       "destination": "/resume",
+      "permanent": true
+    },
+    {
+      "source": "/evaluator-resume/",
+      "destination": "/evaluator-resume",
       "permanent": true
     }
   ],
@@ -106,6 +119,28 @@
         {
           "key": "Content-Disposition",
           "value": "attachment; filename=\"Gonzalo Enei - Resume.pdf\""
+        }
+      ]
+    },
+    {
+      "source": "/evaluator-resume",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/pdf/evaluator",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Gonzalo Enei - Resume.pdf\""
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
     }
