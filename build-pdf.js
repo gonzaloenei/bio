@@ -96,9 +96,10 @@ if (fs.existsSync(LETTERS)) {
     const slug = path.basename(file, '.html');
     const src = path.join(LETTERS, file);
     const omit = omitOf(src);
-    render(
-      [mainOf(src), omit ? stripClass(resume, omit) : resume],
-      path.join(OUTDIR, `${slug}.pdf`)
-    );
+    // <main data-letter-only> ships the letter alone, for applications that
+    // take the resume as a separate upload.
+    const letterOnly = /<main[^>]*\sdata-letter-only[\s>=]/i.test(fs.readFileSync(src, 'utf8'));
+    const pages = letterOnly ? [mainOf(src)] : [mainOf(src), omit ? stripClass(resume, omit) : resume];
+    render(pages, path.join(OUTDIR, `${slug}.pdf`));
   }
 }
