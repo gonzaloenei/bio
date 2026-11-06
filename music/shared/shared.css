@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --paper: #fbf9f4;
+  --ink: #1d1b1a;
+  --red: #e2402f;
+  --blue: #4aa6e8;
+  --muted: #6d6660;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+
+.hero { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+
+/* The stage is always exactly as tall as the viewport; the sides crop (or show paper) with the width. */
+.stage {
+  position: absolute; left: 50%; top: 50%;
+  width: calc(100vh * 3520 / 2352); width: calc(100svh * 3520 / 2352);
+  aspect-ratio: 3520 / 2352;
+  transform: translate(-50%, -50%);
+}
+.layer { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+
+.headline {
+  position: absolute; z-index: 20; top: clamp(24px, 9vh, 110px); left: 0; right: 0;
+  text-align: center; pointer-events: none; padding: 0 16px;
+}
+.headline h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: clamp(40px, 6vw, 88px); margin: 0; letter-spacing: -0.02em; }
+.headline p { font-size: clamp(16px, 1.6vw, 21px); color: var(--muted); margin: 10px auto 0; max-width: 34ch; }
+
+.proto-nav {
+  position: fixed; z-index: 100; left: 16px; bottom: 16px; display: flex; gap: 6px; flex-wrap: wrap;
+  font: 500 13px Inter, sans-serif;
+}
+.proto-nav a {
+  color: var(--ink); text-decoration: none; background: rgba(255,255,255,.85); backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,.08); padding: 7px 11px; border-radius: 999px;
+}
+.proto-nav a[aria-current] { background: var(--ink); color: #fff; }
+.hint {
+  position: fixed; z-index: 100; right: 16px; bottom: 16px; font: 500 13px Inter, sans-serif; color: var(--muted);
+  background: rgba(255,255,255,.85); padding: 7px 11px; border-radius: 999px; border: 1px solid rgba(0,0,0,.08);
+}
+@media (max-width: 640px) { .hint { display: none; } }
+
+/* Briefing card used by prototypes 3 and 4 */
+.brief-card {
+  background: #fffdf8; border-radius: 10px; padding: 14px 16px 12px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 10px 30px -10px rgba(40,20,10,.35);
+  border-top: 4px solid var(--red); text-align: left;
+}
+.brief-card .when { font: 600 11px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--red); }
+.brief-card .what { font: 700 25px/1.1 Caveat, cursive; margin: 4px 0 6px; color: var(--ink); }
+.brief-card .src { font: 400 12px Inter, sans-serif; color: var(--muted); }

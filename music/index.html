@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/music/">
+<title>Figaro</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="shared/shared.css">
+<style>
+  .scroller { height: 420vh; position: relative; }
+  .hero { position: sticky; top: 0; }
+  .plate, #gl { will-change: opacity, filter; }
+  #gl, .notes { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+  #gl, .notes { visibility: hidden; }
+  .whirling #gl, .whirling .notes { visibility: visible; }
+  .whirling .plate { visibility: hidden; }
+  #front { z-index: 5; }
+  .figure { will-change: transform; }
+  .fly { position: fixed; z-index: 15; left: 0; top: 0; will-change: transform, width, height; pointer-events: none; }
+  .fly img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .fly .brief-card { position: absolute; inset: 0; opacity: 0; display: flex; flex-direction: column; justify-content: center; padding: 8px 14px; }
+  .fly .brief-card .what { font-size: 22px; margin: 2px 0; }
+  .panel-head { position: fixed; left: 0; top: 0; z-index: 16; opacity: 0; pointer-events: none; }
+  .panel-head .day { font: 600 12px Inter, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .panel-head h2 { font: 600 30px/1.1 Fraunces, Georgia, serif; margin: 4px 0 0; }
+  .after { min-height: 80vh; display: grid; place-items: center; text-align: center; padding: 64px 16px; }
+  .after h2 { font: 600 clamp(28px, 4vw, 48px) Fraunces, Georgia, serif; margin: 0 0 8px; }
+  .after p { color: var(--muted); max-width: 46ch; margin: 0 auto; }
+  .progress { position: fixed; z-index: 100; top: 0; left: 0; height: 3px; background: var(--red); width: 0; }
+  .whirl-toggle { position: fixed; z-index: 100; top: 16px; right: 16px; display: flex; align-items: center; gap: 8px;
+    font: 600 13px Inter, sans-serif; color: var(--ink); cursor: pointer; padding: 8px 14px 8px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.85); backdrop-filter: blur(6px); border: 1px solid rgba(0,0,0,.1); }
+  .whirl-toggle .dot { width: 30px; height: 18px; border-radius: 999px; background: #d9d4cc; position: relative; transition: background .2s; }
+  .whirl-toggle .dot::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .2s; }
+  .whirl-toggle[aria-pressed="true"] .dot { background: var(--red); }
+  .whirl-toggle[aria-pressed="true"] .dot::after { transform: translateX(12px); }
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<button class="whirl-toggle" id="toggle" aria-pressed="false"><span class="dot"></span>Whirl on scroll</button>
+<div class="scroller" id="scroller">
+  <section class="hero" id="hero">
+    <canvas id="gl"></canvas>
+    <canvas id="back" class="notes"></canvas>
+    <div class="stage" id="stage"></div>
+    <canvas id="front" class="notes"></canvas>
+    <div class="headline" id="headline">
+      <h1>Figaro</h1>
+      <p>The family briefing that keeps everyone in tune.</p>
+    </div>
+  </section>
+</div>
+<section class="after">
+  <div>
+    <h2>Every morning, one page.</h2>
+    <p>Figaro reads the emails, group chats and calendars so you don't have to.</p>
+  </div>
+</section>
+<div class="hint">Scroll, and scroll back up</div>
+
+<script type="module">
+import { place, img, SHEETS, BRIEFING, BOX, toScreen, pointer, clamp, lerp, prefersReducedMotion } from './shared/stage.js';
+import { createBackground, createNotes } from './shared/whirl.js';
+
+const stage = document.getElementById('stage');
+const plate = img('assets/plate.jpg', 'layer plate');
+stage.appendChild(plate);
+const fig = place(img('assets/figaro.png', 'figure'), 'figaro');
+stage.appendChild(fig);
+const headline = document.getElementById('headline');
+const hero = document.getElementById('hero');
+const canvas = document.getElementById('gl');
+
+const head = document.createElement('div');
+head.className = 'panel-head';
+head.innerHTML = `<div class="day">Thursday · 6:45 am</div><h2>Your family briefing</h2>`;
+document.body.appendChild(head);
+
+// The flying sheets live in viewport space so they can leave the stage and become list rows.
+const flyers = SHEETS.map((key, i) => {
+  const el = document.createElement('div');
+  el.className = 'fly';
+  const b = BRIEFING[key];
+  el.innerHTML = `<img src="assets/${key}.png" alt=""><div class="brief-card"><div class="when">${b.when}</div><div class="what">${b.what}</div><div class="src">${b.src}</div></div>`;
+  document.body.appendChild(el);
+  const [x0, y0, x1, y1] = BOX[key];
+  return { key, i, el, im: el.querySelector('img'), card: el.querySelector('.brief-card'), box: [x0, y0, x1, y1], dir: i % 2 ? 1 : -1 };
+});
+
+// ---- whirl toggle: the paint vortex + note streams, loaded the first time it is switched on
+const toggle = document.getElementById('toggle');
+let whirlOn = false, bg = null, notes = null, loading = null;
+async function setWhirl(on) {
+  whirlOn = on;
+  toggle.setAttribute('aria-pressed', on);
+  try { localStorage.setItem('figaro-whirl', on ? '1' : '0'); } catch {}
+  if (on && !bg) {
+    loading ??= Promise.all([
+      createBackground(canvas, { plate: 'assets/plate.jpg', assets: 'assets/', zoom: 1 }),
+      Promise.resolve(createNotes(document.getElementById('back'), document.getElementById('front'))),
+    ]);
+    [bg, notes] = await loading;
+  }
+  hero.classList.toggle('whirling', whirlOn && !!bg);
+}
+toggle.addEventListener('click', () => setWhirl(!whirlOn));
+let saved = null; try { saved = localStorage.getItem('figaro-whirl'); } catch {}
+if (new URLSearchParams(location.search).has('whirl') || saved === '1') setWhirl(true);
+
+const ease = t => t < .5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+const seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
+
+const scroller = document.getElementById('scroller');
+const bar = document.getElementById('bar');
+const ptr = pointer();
+let prog = 0, lastTwist = 0;
+
+function frame() {
+  ptr.update(0.06);
+  const max = scroller.offsetHeight - innerHeight;
+  const target = clamp(scrollY / max, 0, 1);
+  prog += (target - prog) * (prefersReducedMotion ? 1 : 0.12);
+  const p = prog;
+  bar.style.width = (clamp(scrollY / (document.documentElement.scrollHeight - innerHeight), 0, 1) * 100) + '%';
+
+  const vw = innerWidth, vh = innerHeight, wide = vw > 820;
+  // Where the briefing panel ends up
+  const panelW = Math.min(400, vw - 32);
+  const panelX = wide ? vw * 0.58 : (vw - panelW) / 2;
+  const rowH = wide ? 92 : 84, gap = 10;
+  const listH = SHEETS.length * (rowH + gap);
+  const panelY = wide ? Math.max(90, (vh - listH) / 2 + 30) : vh - listH - 70;
+
+  // Background: the chaos quiets down
+  const calm = ease(seg(p, 0.15, 0.7));
+  const bgEl = whirlOn && bg ? canvas : plate;
+  bgEl.style.opacity = 1 - calm * 0.72;
+  bgEl.style.filter = `blur(${calm * 3}px) saturate(${1 - calm * 0.6})`;
+  // Figaro steps aside and takes a small bow; mouse adds a bit of life at rest
+  const step = ease(seg(p, 0.2, 0.75));
+  const fx = (wide ? -14 : 0) * step + ptr.x * 0.6 * (1 - step), fy = (wide ? 4 : -6) * step;
+  fig.style.transform = `translate(${fx}%, ${fy}%) rotate(${-4 * step + ptr.x * 1.2 * (1 - step)}deg) scale(${1 - 0.12 * step})`;
+  fig.style.opacity = wide ? 1 : 1 - step * 0.6;
+  headline.style.opacity = 1 - seg(p, 0.02, 0.18);
+  headline.style.transform = `translateY(${-40 * seg(p, 0.02, 0.18)}px)`;
+
+  // Whirl: the paint winds up while the sheets take off; the notes stream, then fade as the briefing lands.
+  if (whirlOn && bg) {
+    const twist = prefersReducedMotion ? 0 : 3.2 * ease(seg(p, 0.02, 0.5));
+    bg.render(0, 0, twist, twist - lastTwist);
+    lastTwist = twist;
+    const r = stage.getBoundingClientRect();
+    const fw = r.width * (BOX.figaro[2] - BOX.figaro[0]) / 3520, fh = r.height * (BOX.figaro[3] - BOX.figaro[1]) / 2352;
+    notes.render(stage, p * 16, (1 - ease(seg(p, 0.55, 0.85))) * (wide ? 1 : 1 - step * 0.6), fx / 100 * fw, fy / 100 * fh, true);
+  }
+
+  const headIn = ease(seg(p, 0.62, 0.78));
+  head.style.opacity = headIn;
+  head.style.transform = `translate(${panelX}px, ${panelY - 70 + (1 - headIn) * 20}px)`;
+
+  for (const f of flyers) {
+    const [x0, y0, x1, y1] = f.box;
+    const a = toScreen(stage, x0, y0), b = toScreen(stage, x1, y1);
+    // start: where the sheet sits in the illustration (with a little mouse parallax)
+    const par = 12 + f.i * 4;
+    const sx = a.x - ptr.x * par, sy = a.y - ptr.y * par, sw = b.x - a.x, sh = b.y - a.y;
+    // end: its row in the briefing
+    const ex = panelX, ey = panelY + f.i * (rowH + gap), ew = panelW, eh = rowH;
+
+    // staggered flight
+    const t = ease(seg(p, 0.12 + f.i * 0.07, 0.48 + f.i * 0.07));
+    const arc = Math.sin(Math.PI * t) * (wide ? 140 : 80);
+    const x = lerp(sx, ex, t), y = lerp(sy, ey, t) - arc;
+    const w = lerp(sw, ew, t), h = lerp(sh, eh, t);
+    const spin = Math.sin(Math.PI * t) * 22 * f.dir;
+    f.el.style.width = w + 'px';
+    f.el.style.height = h + 'px';
+    f.el.style.transform = `translate(${x}px, ${y}px) rotate(${spin}deg)`;
+
+    // on landing, the sheet of music turns into a briefing item
+    const morph = seg(t, 0.75, 1);
+    f.im.style.opacity = 1 - morph;
+    f.card.style.opacity = morph;
+    f.el.style.filter = t > 0 && t < 1 ? `drop-shadow(0 ${10 * Math.sin(Math.PI * t)}px 16px rgba(40,20,10,.2))` : 'none';
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
