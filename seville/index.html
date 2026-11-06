@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/seville/">
+<title>figaro</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="seville.css">
+<style>
+  .scroller { height: 440vh; position: relative; }
+    .hero { position: sticky; top: 0; width: 100%; height: 100vh; height: 100svh; aspect-ratio: auto; }
+  .stage { top: 50%; transform: translate(-50%, -50%); will-change: transform; overflow: visible; }
+  .plate, .sky { will-change: opacity, filter, transform; }
+  .cloud, .bird { position: absolute; will-change: transform; user-select: none; -webkit-user-drag: none; }
+  .bird { transform-origin: 50% 60%; }
+  .fly { position: fixed; z-index: 15; left: 0; top: 0; pointer-events: none; will-change: transform; transform-origin: 0 0; }
+  .fly .shout { position: absolute; left: 0; top: 0; opacity: 1; }
+  .fly .brief-card { position: absolute; left: 0; top: 0; opacity: 0; padding: 10px 14px; }
+  .fly .brief-card .what { font-size: 22px; margin: 2px 0; }
+  .panel-head { position: fixed; left: 0; top: 0; z-index: 16; opacity: 0; pointer-events: none; }
+  .panel-head .day { font: 600 12px Inter, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .panel-head h2 { font: 400 30px/1.1 Gelica, Georgia, serif; margin: 4px 0 0; }
+  .after { min-height: 80vh; display: grid; place-items: center; text-align: center; padding: 64px 16px; }
+  .after h2 { font: 400 clamp(28px, 4vw, 48px) Gelica, Georgia, serif; margin: 0 0 8px; }
+  .after p { color: var(--muted); max-width: 46ch; margin: 0 auto; }
+  .progress { position: fixed; z-index: 100; top: 0; left: 0; height: 3px; background: var(--red); width: 0; }
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<div class="scroller" id="scroller">
+  <section class="hero">
+    <div class="stage" id="stage"></div>
+    <div class="headline" id="headline">
+      <h1>Figaro</h1>
+    </div>
+  </section>
+</div>
+<section class="after">
+  <div>
+    <h2>Every morning, one page.</h2>
+    <p>Figaro listens to the emails, group chats and calendars so you don't have to. This is where the next section of the page would start.</p>
+  </div>
+</section>
+<div class="hint">Sweep the sky · scroll fast for wind · scroll back up</div>
+
+<script type="module">
+import { CALLERS, BOX, BASE, CLOUDS, BIRDS, SCISSORS, place, img, toScreen, pointer, clamp, lerp, ease, seg, prefersReducedMotion } from './stage.js';
+
+const stage = document.getElementById('stage');
+// Sky (clouds painted out) with live clouds and birds, then the town with the sky cut away.
+const skyWrap = document.createElement('div'); skyWrap.className = 'layer sky';
+skyWrap.appendChild(img('sky.jpg'));
+stage.appendChild(skyWrap);
+const clouds = CLOUDS.map((key, i) => {
+  const el = place(img(`${key}.png`, 'cloud'), key);
+  skyWrap.appendChild(el);
+  const [x0, y0, x1, y1] = BOX[key], w = x1 - x0;
+  return { el, x0, y0, w, h: y1 - y0, dx: 0, vx: 0, puff: 0, phase: i * 1.3, near: clamp(w / 600, 0.4, 1.1) * (0.7 + y0 / 1200) };
+});
+const birds = BIRDS.map((key, i) => {
+  const el = place(img(`${key}.png`, 'bird'), key);
+  skyWrap.appendChild(el);
+  const [x0, y0, x1, y1] = BOX[key];
+  return { el, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, ox: 0, oy: 0, vx: 0, vy: 0, scared: 0, phase: i * 2.1, dir: 1 };
+});
+const plate = img('plate-fg.webp', 'layer plate');
+stage.appendChild(plate);
+const dog = place(img('dog.png', ''), 'dog');
+const fig = place(img('figaro.png', ''), 'figaro');
+stage.append(dog, fig);
+const headline = document.getElementById('headline');
+
+// Zoom toward Figaro's chest.
+const [fx0, fy0, fx1, fy1] = BOX.figaro;
+const FOCUS = { x: (fx0 + fx1) / 2, y: fy0 + (fy1 - fy0) * 0.35 };
+stage.style.transformOrigin = `${FOCUS.x / BASE.w * 100}% ${FOCUS.y / BASE.h * 100}%`;
+
+const head = document.createElement('div');
+head.className = 'panel-head';
+head.innerHTML = `<div class="day">Thursday · 6:45 am</div><h2>Your family briefing</h2>`;
+document.body.appendChild(head);
+
+const SHOUTS = ['Figaro!', 'Figaro, qua!', 'Figaro!!', 'Figaro, là!', 'Figaro!', 'Figaro?'];
+const flyers = CALLERS.map((c, i) => {
+  const el = document.createElement('div');
+  el.className = 'fly';
+  el.innerHTML = `<div class="shout${c.at[0] > 1760 ? ' flip' : ''}">${SHOUTS[i]}</div><div class="brief-card"><div class="when">${c.when}</div><div class="what">${c.what}</div><div class="src">${c.src}</div></div>`;
+  document.body.appendChild(el);
+  return { ...c, i, el, shout: el.querySelector('.shout'), card: el.querySelector('.brief-card'), dir: i % 2 ? 1 : -1 };
+});
+// the order they arrive in the briefing: soonest first
+const ORDER = ['hat', 'guitar', 'balcony', 'waiter', 'fan', 'flamenco'];
+
+const scroller = document.getElementById('scroller');
+const bar = document.getElementById('bar');
+const ptr = pointer();
+let prog = 0, last = performance.now(), lastScroll = scrollY, scrollWind = 0;
+const BREEZE = prefersReducedMotion ? 4 : 14;
+
+function frame(now) {
+  const dt = Math.min(50, now - last) / 1000; last = now;
+  ptr.update(0.06);
+  const max = scroller.offsetHeight - innerHeight;
+  prog += (clamp(scrollY / max, 0, 1) - prog) * (prefersReducedMotion ? 1 : 0.12);
+  const p = prog;
+  bar.style.width = (clamp(scrollY / (document.documentElement.scrollHeight - innerHeight), 0, 1) * 100) + '%';
+
+  const vw = innerWidth, vh = innerHeight, wide = vw > 820;
+
+  // Camera: push in on Figaro, then slide him left to make room for the briefing.
+  const push = ease(seg(p, 0.0, 0.35));
+  const aside = ease(seg(p, 0.45, 0.75));
+  const zoom = 1 + push * 0.22 - aside * 0.22;
+  const dx = wide ? -aside * vw * 0.22 : 0;
+  const dy = wide ? 0 : -aside * vh * 0.18;
+  stage.style.transform = `translate(calc(-50% + ${dx + ptr.x * -8 * (1 - push)}px), calc(-50% + ${dy}px)) scale(${zoom})`;
+
+  // The plaza goes quiet once everything is handled.
+  const calm = ease(seg(p, 0.45, 0.8));
+  plate.style.opacity = 1 - calm * 0.65;
+  plate.style.filter = `blur(${calm * 3}px) saturate(${1 - calm * 0.6})`;
+  dog.style.opacity = 1 - calm * 0.5;
+  skyWrap.style.opacity = 1 - calm * 0.65;
+  skyWrap.style.filter = plate.style.filter;
+  headline.style.opacity = 1 - seg(p, 0.02, 0.14);
+
+  // ── Sky ──
+  // Scrolling is wind: fast scrolls blow the clouds along, then they settle back into the breeze.
+  const sv = scrollY - lastScroll; lastScroll = scrollY;
+  scrollWind = scrollWind * 0.9 + clamp(sv, -120, 120) * (prefersReducedMotion ? 0 : 0.6);
+  const r = stage.getBoundingClientRect(), s = r.width / BASE.w, k = stage.clientWidth / BASE.w;
+  skyWrap.style.transform = `translate(${ptr.x * -6}px, ${ptr.y * -4 + p * 40}px)`;   // the sky sinks a little as we push in
+  const mx = (ptr.px - r.left) / s, my = (ptr.py - r.top) / s;
+  const inSky = ptr.inside && my < 1250;
+  for (const c of clouds) {
+    const cx = c.x0 + c.dx + c.w / 2, cy = c.y0 + c.h / 2;
+    if (inSky && ptr.speed > 4) {
+      const d = Math.hypot((mx - cx) / (c.w * 0.5 + 260), (my - cy) / (c.h * 0.5 + 220));
+      if (d < 1) { const f = (1 - d) * c.near; c.vx += (ptr.vx / s) * f * 0.9; c.puff = Math.min(1, c.puff + f * 0.12); }
+    }
+    c.vx += scrollWind * c.near * 0.15;
+    c.vx *= 0.965; c.dx += (BREEZE * c.near + c.vx) * dt; c.puff *= 0.96;
+    if (c.x0 + c.dx > BASE.w + 60) c.dx -= BASE.w + c.w + 120;
+    if (c.x0 + c.dx + c.w < -60) c.dx += BASE.w + c.w + 120;
+    const bob = prefersReducedMotion ? 0 : Math.sin(now / 3000 + c.phase) * 3;
+    const st = 1 + clamp(Math.abs(c.vx) / 900, 0, 0.18);
+    c.el.style.transform = `translate(${c.dx * k}px, ${bob * k}px) scale(${st * (1 + c.puff * 0.05)}, ${1 + c.puff * 0.05 - (st - 1) * 0.4})`;
+  }
+  // Birds scatter from the cursor, and take off for good once the plaza gets loud.
+  const loud = seg(p, 0.06, 0.3);
+  for (const b of birds) {
+    const d = Math.hypot(mx - (b.cx + b.ox), my - (b.cy + b.oy));
+    if ((ptr.inside && d < 220 && b.scared < 0.3) || (loud > 0.3 && b.scared < 0.3 && !b.gone)) {
+      const ang = ptr.inside && d < 220 ? Math.atan2(b.cy + b.oy - my, b.cx + b.ox - mx) : -Math.PI / 2 + (b.phase % 2 - 1) * 0.6;
+      b.vx += Math.cos(ang) * 22; b.vy += Math.sin(ang) * 12 - 10; b.scared = 1; b.gone = loud > 0.3;
+    }
+    if (loud < 0.1) b.gone = false;
+    b.scared = Math.max(b.gone ? 0.5 : 0, b.scared - dt * 0.25);
+    const t = now / 1000 + b.phase, pull = b.scared > 0.4 ? 0.002 : 0.012;
+    b.vx = (b.vx + (Math.cos(t * 0.35) * 40 - b.ox) * pull) * 0.97;
+    b.vy = (b.vy + (Math.sin(t * 0.7) * 14 - b.oy) * pull) * 0.97;
+    b.ox += b.vx; b.oy += b.vy;
+    if (Math.abs(b.vx) > 0.6) b.dir = Math.sign(b.vx);
+    const flap = prefersReducedMotion ? 1 : 0.65 + 0.35 * Math.cos(t * (b.scared > 0.2 ? 22 : 5));
+    b.el.style.transform = `translate(${b.ox * k}px, ${b.oy * k}px) scale(${-b.dir}, ${flap})`;
+  }
+  headline.style.transform = `translateY(${-40 * seg(p, 0.02, 0.14)}px)`;
+
+  // Where the briefing ends up
+  const panelW = Math.min(400, vw - 32);
+  const panelX = wide ? vw * 0.56 : (vw - panelW) / 2;
+  const rowH = wide ? 88 : 80, gap = 10;
+  const listH = flyers.length * (rowH + gap);
+  const panelY = wide ? Math.max(100, (vh - listH) / 2 + 30) : vh - listH - 60;
+  const headIn = ease(seg(p, 0.72, 0.84));
+  head.style.opacity = headIn;
+  head.style.transform = `translate(${panelX}px, ${panelY - 70 + (1 - headIn) * 20}px)`;
+
+  const hand = toScreen(stage, SCISSORS.x, SCISSORS.y);
+  for (const f of flyers) {
+    const row = ORDER.indexOf(f.id);
+    const at = toScreen(stage, f.at[0], f.at[1]);
+    const flip = f.at[0] > 1760;
+    // 1) everyone calls at once: shouts pop up over their heads, staggered
+    const pop = ease(seg(p, 0.06 + f.i * 0.035, 0.12 + f.i * 0.035));
+    // 2) each call flies to Figaro's raised hand…  3) …and on into its row in the briefing
+    const toHand = ease(seg(p, 0.36 + row * 0.04, 0.48 + row * 0.04));
+    const toRow = ease(seg(p, 0.5 + row * 0.04, 0.66 + row * 0.04));
+
+    const sw = f.shout.offsetWidth;
+    const sx = clamp(flip ? at.x - sw + 14 : at.x - 14, 8, vw - sw - 8), sy = clamp(at.y - 75, 60, vh - 60);
+    const hx = hand.x - sw / 2, hy = hand.y - 50;
+    const ex = panelX, ey = panelY + row * (rowH + gap);
+
+    let x = lerp(sx, hx, toHand), y = lerp(sy, hy, toHand) - Math.sin(Math.PI * toHand) * 60;
+    x = lerp(x, ex, toRow); y = lerp(y, ey, toRow) - Math.sin(Math.PI * toRow) * (wide ? 80 : 40);
+    const spin = Math.sin(Math.PI * toHand) * 18 * f.dir + Math.sin(Math.PI * toRow) * -10 * f.dir;
+    const shrink = 1 - Math.sin(Math.PI * toHand) * 0.35;
+    const jiggle = prefersReducedMotion ? 0 : Math.sin(performance.now() / 120 + f.i) * 2 * pop * (1 - toHand);
+    f.el.style.transform = `translate(${x}px, ${y + jiggle}px) rotate(${spin}deg) scale(${pop * shrink})`;
+    f.el.style.opacity = pop;
+
+    // on landing, the shout turns into a briefing line
+    const morph = seg(toRow, 0.6, 1);
+    f.shout.style.opacity = 1 - morph;
+    f.card.style.opacity = morph;
+    f.card.style.width = panelW + 'px';
+    f.card.style.height = rowH + 'px';
+    f.card.style.transform = `scale(${lerp(0.4, 1, morph)})`;
+    f.card.style.transformOrigin = '0 0';
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

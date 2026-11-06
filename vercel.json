@@ -41,6 +41,10 @@
       "destination": "/gonzalo-enei.pdf"
     },
     {
+      "source": "/seville",
+      "destination": "/seville/index.html"
+    },
+    {
       "source": "/resume",
       "destination": "/resume.html"
     },
