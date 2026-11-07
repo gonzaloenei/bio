@@ -45,6 +45,10 @@
       "destination": "/seville/index.html"
     },
     {
+      "source": "/seville/mobile",
+      "destination": "/seville/mobile.html"
+    },
+    {
       "source": "/music",
       "destination": "/music/index.html"
     },
