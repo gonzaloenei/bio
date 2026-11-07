@@ -11,22 +11,18 @@
   /* One short scroll: the name gives way to the promise. */
   .scroller { height: 260vh; height: 260svh; position: relative; }
   .hero { position: sticky; top: 0; }
-  /* On a phone the painting opens whole, fitted to the width, floating in its own sky; scrolling pushes in to Figaro. */
-  .hero { background: #54befc; }
-  .ground { position: absolute; left: 0; right: 0; bottom: 0; background: #eadabe; }
-  .stage { left: 0; transform: none; transform-origin: 0 0; will-change: transform;
-    -webkit-mask-image: linear-gradient(transparent, #000 9%, #000 96%, transparent); mask-image: linear-gradient(transparent, #000 9%, #000 96%, transparent); }
+  /* Full height, sides cropped; nudged right of centre so Figaro and the dog both fit on a phone. No camera moves: only the words change. */
+  .stage { transform: translateX(-51.1%); }
   .cloud { position: absolute; will-change: transform; user-select: none; -webkit-user-drag: none; }
   .titles { position: absolute; z-index: 20; left: 0; right: 0; top: clamp(56px, 13svh, 140px); padding: 0 24px; text-align: center; pointer-events: none; color: #fff; }
-  .titles > * { position: absolute; left: 24px; right: 24px; top: 0; margin: 0; will-change: opacity, transform, filter; }
-  .titles h1 { font: 400 clamp(64px, 19vw, 126px)/.8 Gelica, Georgia, serif; text-transform: lowercase; letter-spacing: .01em; }
-  .titles h2 { font: 400 clamp(34px, 9.5vw, 64px)/1.02 Gelica, Georgia, serif; opacity: 0; max-width: 12ch; margin: 0 auto; }
+  .titles > * { position: absolute; left: 24px; right: 24px; top: 0; margin: 0; padding: .1em 0 .2em; will-change: opacity, transform, filter; }
+  .titles h1 { font: 400 clamp(64px, 19vw, 126px)/1.15 Gelica, Georgia, serif; text-transform: lowercase; letter-spacing: .01em; }
+  .titles h2 { font: 400 clamp(34px, 9.5vw, 64px)/1.15 Gelica, Georgia, serif; opacity: 0; max-width: 12ch; margin: 0 auto; }
 </style>
 </head>
 <body>
 <div class="scroller" id="scroller">
   <section class="hero">
-    <div class="ground" id="ground"></div>
     <div class="stage" id="stage"></div>
     <div class="titles">
       <h1 id="title">figaro</h1>
@@ -50,8 +46,7 @@ const clouds = CLOUDS.map((key, i) => {
 });
 stage.append(img('plate-fg.webp', 'layer'), place(img('dog.png', ''), 'dog'), place(img('figaro.png', ''), 'figaro'));
 
-const scroller = document.getElementById('scroller'), ground = document.getElementById('ground'), hero = document.querySelector('.hero');
-const FOCUS_X = 1800 / BASE.w;   // a little right of centre, so Figaro and the dog both fit
+const scroller = document.getElementById('scroller');
 const title = document.getElementById('title'), sub = document.getElementById('sub');
 let prog = 0, last = performance.now(), lastScroll = scrollY, wind = 0;
 const BREEZE = prefersReducedMotion ? 4 : 14;
@@ -72,16 +67,6 @@ function frame(now) {
   sub.style.opacity = inn;
   sub.style.transform = `translateY(${22 * (1 - inn)}px)`;
   sub.style.filter = `blur(${(1 - inn) * 6}px)`;
-
-  // Camera: open on the whole painting (fitted to the width), end full height and centred on Figaro.
-  const vw = hero.offsetWidth, vh = hero.offsetHeight, W = stage.offsetWidth, H = stage.offsetHeight;
-  const s0 = Math.min(1, vw / W), s1 = s0 < 1 ? 1.06 : 1;
-  const x0 = (vw - W * s0) / 2, y0 = Math.max(0, vh * 0.56 - H * s0 / 2);
-  const x1 = clamp(vw / 2 - FOCUS_X * W * s1, vw - W * s1, 0), y1 = vh - H * s1;
-  const push = ease(seg(p, 0.12, 0.8));
-  const sc = lerp(s0, s1, push), tx = lerp(x0, x1, push), ty = lerp(y0, y1, push);
-  stage.style.transform = `translate(${tx}px, ${ty}px) scale(${sc})`;
-  ground.style.top = (ty + H * sc * 0.95) + 'px';   // tucks under the faded bottom edge
 
   // Clouds drift on a breeze; a flick of the thumb blows them along.
   const sv = scrollY - lastScroll; lastScroll = scrollY;
