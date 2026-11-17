@@ -13,18 +13,6 @@
       "destination": "https://garden-of-eve-ochre.vercel.app/garden-of-eve/:path*"
     },
     {
-      "source": "/north-rose",
-      "destination": "https://north-rose.vercel.app/north-rose"
-    },
-    {
-      "source": "/north-rose/",
-      "destination": "https://north-rose.vercel.app/north-rose"
-    },
-    {
-      "source": "/north-rose/:path*",
-      "destination": "https://north-rose.vercel.app/north-rose/:path*"
-    },
-    {
       "source": "/claude-interviews",
       "destination": "https://claude-interviews.vercel.app/claude-interviews"
     },
@@ -103,6 +91,16 @@
       "source": "/evaluator-resume/",
       "destination": "/evaluator-resume",
       "permanent": true
+    },
+    {
+      "source": "/north-rose",
+      "destination": "https://north-rose.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/north-rose/:path*",
+      "destination": "https://north-rose.vercel.app/:path*",
+      "permanent": false
     }
   ],
   "headers": [
