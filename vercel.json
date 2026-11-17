@@ -98,6 +98,11 @@
       "permanent": false
     },
     {
+      "source": "/north-rose/",
+      "destination": "https://north-rose.vercel.app",
+      "permanent": false
+    },
+    {
       "source": "/north-rose/:path*",
       "destination": "https://north-rose.vercel.app/:path*",
       "permanent": false
