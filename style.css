@@ -45,6 +45,7 @@ a:hover { text-decoration-color: #8a8a8a; }
 .logo-ode        { width: 1.585em; height: 0.70em; vertical-align: -0.02em; }
 .logo-google     { width: 1.034em; height: 1.05em; }
 .logo-spot       { width: 1.325em; height: 1.05em; }
+.logo-figaro     { width: 1.05em;  height: 1.05em; border-radius: 0.2em; }
 
 /* ---- Resume ---------------------------------------------------------- */
 .resume-name {
@@ -104,15 +105,16 @@ strong { font-weight: 500; }
     logo-pop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
   animation-delay: var(--d, 0.6s), calc(var(--d, 0.6s) + 0.1s);
 }
-.animate-logos .logo-faces      { --d: 0.4s; }
-.animate-logos .logo-perhaps    { --d: 0.8s; }
-.animate-logos .logo-workspace  { --d: 1.2s; }
-.animate-logos .logo-interfaces { --d: 1.55s; }
-.animate-logos .logo-fintual    { --d: 1.85s; }
+.animate-logos .logo-figaro     { --d: 0.4s; }
+.animate-logos .logo-faces      { --d: 0.75s; }
+.animate-logos .logo-perhaps    { --d: 1.1s; }
+.animate-logos .logo-workspace  { --d: 1.45s; }
+.animate-logos .logo-interfaces { --d: 1.75s; }
+.animate-logos .logo-fintual    { --d: 2.05s; }
 /* The resume's marks arrive in their own reading order. They sit far apart
    vertically, so the stagger is paced to a downward scan rather than the
    bio's within-a-sentence rhythm — and the gaps widen as they go. */
-.animate-logos .resume .logo-spot    { --d: 0.4s; }
+.animate-logos .resume .logo-figaro  { --d: 0.4s; }
 .animate-logos .resume .logo-faces   { --d: 0.86s; }
 .animate-logos .resume .logo-fintual { --d: 1.26s; }
 .animate-logos .resume .logo-evml    { --d: 1.76s; }
