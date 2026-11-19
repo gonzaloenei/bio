@@ -57,39 +57,14 @@
       "destination": "/resume.html"
     },
     {
-      "source": "/pdf/ode",
-      "destination": "/pdf/ode.pdf"
-    },
-    {
-      "source": "/pdf/google",
-      "destination": "/pdf/google.pdf"
-    },
-    {
       "source": "/pdf/resume",
       "destination": "/pdf/resume.pdf"
-    },
-    {
-      "source": "/evaluator-resume",
-      "destination": "/evaluator-resume.html"
-    },
-    {
-      "source": "/pdf/evaluator",
-      "destination": "/pdf/evaluator.pdf"
-    },
-    {
-      "source": "/pdf/beast",
-      "destination": "/pdf/beast.pdf"
     }
   ],
   "redirects": [
     {
       "source": "/resume/",
       "destination": "/resume",
-      "permanent": true
-    },
-    {
-      "source": "/evaluator-resume/",
-      "destination": "/evaluator-resume",
       "permanent": true
     },
     {
@@ -119,72 +94,11 @@
       ]
     },
     {
-      "source": "/pdf/ode",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"Gonzalo Enei - Ode.pdf\""
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
-      "source": "/pdf/google",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"Gonzalo Enei - Google.pdf\""
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
       "source": "/pdf/resume",
       "headers": [
         {
           "key": "Content-Disposition",
           "value": "attachment; filename=\"Gonzalo Enei - Resume.pdf\""
-        }
-      ]
-    },
-    {
-      "source": "/evaluator-resume",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
-      "source": "/pdf/evaluator",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"Gonzalo Enei - Resume.pdf\""
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
-      "source": "/pdf/beast",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"Gonzalo Enei - Beast Industries.pdf\""
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
         }
       ]
     }
